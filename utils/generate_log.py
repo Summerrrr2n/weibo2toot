@@ -5,9 +5,9 @@ import os
 from os import path
 
 
-
 date = time.strftime("%Y-%m-%d", time.localtime())
 cur_time = time.strftime("%H:%M:%S", time.localtime())
+
 
 def getYesterday():
     today = datetime.date.today()
@@ -21,13 +21,22 @@ def GenerateLog(text):
     yesterday = getYesterday()
     if path.exists("email_%s.txt" % yesterday):
         os.remove("email_%s.txt" % yesterday)
+    if not path.exists("email_%s.txt" % date):
+        create_log = open("email_%s.txt" % date,'w')
+        create_log.close()
 
     # 写今日log
-    log = open("email_%s.txt" % date, 'w+')
-    first_line = log.readline().rstrip()
+    # 标题
+    log_date = open("email_%s.txt" % date, 'r+')
+    first_line = log_date.readline().rstrip()
     if first_line != date:
-        log.write(date + '\n')
-    log.write(cur_time+": "+text)
+        log_date.write(date + '\n')
+    log_date.close()
+
+    #内容
+    log_content = open("email_%s.txt" % date, 'a')
+    log_content.write(cur_time+": "+text+'\n')
+    log_content.close()
 
 
 def GetTodayLog():
