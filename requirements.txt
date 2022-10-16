@@ -1,0 +1,7 @@
+beautifulsoup4==4.9.1
+Pillow==9.0.1
+ffmpy==0.2.3
+feedparser==6.0.2
+Mastodon.py==1.5.1
+filetype==1.0.7
+yagmail==0.15.293
