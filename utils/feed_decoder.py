@@ -45,7 +45,7 @@ def TweetDecoder(rss_data):
   # 获取视频
   for link in soup.find_all('a'):
     # link.replace_with(' ' + link.get('href') + ' ')
-    print("aaaa",link)
+    # print("aaaa",link)
     if (link.has_attr('data-url')):
       if ('://t.cn/' in link.get('data-url')):
         if ('微博视频' in link.getText()):
@@ -65,18 +65,18 @@ def TweetDecoder(rss_data):
       img = span.find('img')
       if not img:
         img.replace_with(img.get('alt'))
-  print('soup:', soup)
+  # print('soup:', soup)
 
   source = soup.find('source')
   if source:
-    print('src:',source.get('src'))
+    # print('src:',source.get('src'))
     if source.get('src') and ('.mp4' in source.get('src')):
       # need to add a reffer i guess.
       data['video'].append(source.get('src'))
 
   video = soup.find('video')
   if video:
-    print('video:',video.get('poster'))
+    # print('video:',video.get('poster'))
     if video.get('poster') and ('.jpg' in video.get('poster')):
       # need to add a reffer i guess.
       data['video_poster'].append(video.get('poster'))
