@@ -10,7 +10,7 @@ License: MIT
 import urllib.request
 # import ffmpy
 from .get_config import GetConfig
-
+# from get_config import GetConfig
 config = GetConfig()
 
 def MediaDownloader(data):
@@ -60,9 +60,10 @@ def MediaDownloader(data):
     res['video_count']=video_id
   
   res['plain']=data['plain']
+  # print(res)
 
   return res
 
 if __name__ == '__main__':
-  test_data = {'gif': ['https://video.twimg.com/tweet_video/EZLxKmTUMAARbSa.mp4'], 'gif_poster': ['https://pbs.twimg.com/tweet_video_thumb/EZLxKmTUMAARbSa.jpg'], 'video': ['https://video.twimg.com/ext_tw_video/1265470079203827712/pu/vid/1280x720/B-BRCBM0djUAqJl0.mp4?tag=10'], 'video_poster': ['https://pbs.twimg.com/ext_tw_video_thumb/1265470079203827712/pu/img/VujsmqbQORfHDeCP.jpg'], 'image': ['https://pbs.twimg.com/media/EZJh5RPUMAEz4aS?format=jpg&name=orig','https://s3-view.2heng.xin/aws_cached/2019/07/14/53c2adbc381e3aa17968d5d36feee002.md.png', 'https://s3-view.2heng.xin/aws_cached/2020/05/19/b1a7d8ff391616ad152f9958c6302ba0.md.jpg', 'https://s3-view.2heng.xin/aws_cached/2020/05/18/671a82563dfe40885196166683bf6f0b.md.jpg'], 'plain': '流程图工具 Excalidraw 可以做出下面这样的图示效果，可惜中文没有手写效果。 https://excalidraw.com/ '}
+  test_data = {'video': ['https://f.video.weibocdn.com/hrfYS4hVlx07Q48dZjxm010412001vQL0E010.mp4?label=mp4_hd&template=640x360.25.0&trans_finger=d8257cc71422c9ad30fe69ce9523c87b&ori=0&ps=1CwnkDw1GXwCQx&Expires=1679474829&ssig=kPl9nCoxhQ&KID=unistore,video'], 'video_poster': ['https://wx3.sinaimg.cn/orj480/0084sde8gy1gure7e20d3j60k00baq4f02.jpg'], 'image': [], 'plain': '摸摸毛毛亲亲脑袋！\n:dance_cool_doge: https://weibo.com/7394892032/MymdNve8p'}
   MediaDownloader(test_data)

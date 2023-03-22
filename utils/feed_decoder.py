@@ -13,7 +13,6 @@ import re
 from .get_config import GetConfig
 # from get_config import GetConfig
 
-
 config = GetConfig()
 
 
@@ -32,14 +31,7 @@ def TweetDecoder(rss_data):
   :params object: Summary from FeedParaser
   :return object
   """
-#   rss_data = {
-#   "title": "大家怎样安抚冲动的狗狗呢？",
-#   "summary": "大家怎样安抚冲动的狗狗呢？ <br /><br /><a href=\"https://wx4.sinaimg.cn/large/006pGgg8ly1h1jmdcjdq6j30mz0k2gps.jpg\" target=\"_blank\"><img src=\"https://wx4.sinaimg.cn/large/006pGgg8ly1h1jmdcjdq6j30mz0k2gps.jpg\" /></a>",
-#   "id": "https://weibo.com/5876277672/LpLKF56FE",
-#   "link": "https://weibo.com/5876277672/LpLKF56FE"
-# }
-
-  # debugPrint(rss_data)
+  # rss_data = {'title': '摸摸毛毛亲亲脑袋！[抱一抱] - 转发 @萨摩耶受益者联盟:&ensp;摸摸毛毛亲亲脑袋！ig：remy.samoyed | remy的妈咪真的好温柔哦！是相互治愈的存在！ 萨摩耶受益者...', 'summary': '摸摸毛毛亲亲脑袋！<span class="url-icon"><img alt="[抱一抱]" src="https://h5.sinaimg.cn/m/emoticon/icon/default/co_a1hug-f3910d0e88.png" style="width: 1em; height: 1em;" /></span><br /><blockquote> - 转发 <a href="https://weibo.com/7394892032" target="_blank">@萨摩耶受益者联盟</a>:\u2002摸摸毛毛亲亲脑袋！<br /><br />ig：remy.samoyed | remy的妈咪真的好温柔哦！是相互治愈的存在！ <a href="https://video.weibo.com/show?fid=1034:4684863085936657"><span class="url-icon"><img src="https://h5.sinaimg.cn/upload/2015/09/25/3/timeline_card_small_video_default.png" style="width: 1rem; height: 1rem;" /></span><span class="surl-text">萨摩耶受益者联盟的微博视频</span></a> </blockquote><br clear="both" /><div style="clear: both;"></div><video controls="controls" poster="https://wx3.sinaimg.cn/orj480/0084sde8gy1gure7e20d3j60k00baq4f02.jpg" style="width: 100%;"><source src="https://f.video.weibocdn.com/hrfYS4hVlx07Q48dZjxm010412001vQL0E010.mp4?label=mp4_hd&amp;template=640x360.25.0&amp;trans_finger=d8257cc71422c9ad30fe69ce9523c87b&amp;ori=0&amp;ps=1CwnkDw1GXwCQx&amp;Expires=1679474829&amp;ssig=kPl9nCoxhQ&amp;KID=unistore,video" /><source src="https://f.video.weibocdn.com/RH0pnL3Tlx07Q48e0fHq010412001Gin0E010.mp4?label=mp4_ld&amp;template=640x360.25.0&amp;trans_finger=6006a648d0db83b7d9951b3cee381a9c&amp;ori=0&amp;ps=1CwnkDw1GXwCQx&amp;Expires=1679474829&amp;ssig=kAoLhpvU0Y&amp;KID=unistore,video" /><p>视频无法显示，请前往<a href="https://video.weibo.com/show?fid=1034%3A4684863085936657&amp;luicode=10000011&amp;lfid=1076037394892032" rel="noopener noreferrer" target="_blank">微博视频</a>观看。</p></video>', 'id': 'https://weibo.com/7394892032/MymdNve8p', 'link': 'https://weibo.com/7394892032/MymdNve8p'}  # debugPrint(rss_data)
   soup = BeautifulSoup(rss_data['summary'], features='html.parser')
 
   data = {
@@ -53,6 +45,7 @@ def TweetDecoder(rss_data):
   # 获取视频
   for link in soup.find_all('a'):
     # link.replace_with(' ' + link.get('href') + ' ')
+    print("aaaa",link)
     if (link.has_attr('data-url')):
       if ('://t.cn/' in link.get('data-url')):
         if ('微博视频' in link.getText()):
@@ -72,13 +65,20 @@ def TweetDecoder(rss_data):
       img = span.find('img')
       if not img:
         img.replace_with(img.get('alt'))
+  print('soup:', soup)
 
-  for video in soup.find_all('video'):
-    print(video.get('src'))
-    print(video.get('src'))
-    if video.get('src') and ('://f.video.weibocdn.com' in video.get('src')):
+  source = soup.find('source')
+  if source:
+    print('src:',source.get('src'))
+    if source.get('src') and ('.mp4' in source.get('src')):
       # need to add a reffer i guess.
-      data['video'].append(video.get('src'))
+      data['video'].append(source.get('src'))
+
+  video = soup.find('video')
+  if video:
+    print('video:',video.get('poster'))
+    if video.get('poster') and ('.jpg' in video.get('poster')):
+      # need to add a reffer i guess.
       data['video_poster'].append(video.get('poster'))
       video.replace_with('')
 
