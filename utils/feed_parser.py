@@ -29,8 +29,6 @@ def FeedParaser(rss_link):
     data['id']=item['id']
     data['link']=item['link']
     rss.append(data)
-    if "视频" in item['summary']:
-      print(data) 
   if rss:
     print("获取RSS成功，开始解析...")
   else:
