@@ -37,4 +37,5 @@ def FeedParaser(rss_link):
   return rss
   
 if __name__ == '__main__':
-  print(str(FeedParaser("https://puppybotrss.vercel.app/weibo/user/7394892032")))
+  print(str(FeedParaser("https://rss.summerrrrrr.blue/weibo/user/7394892032")))
+  # FeedParaser("https://rss.summerrrrrr.blue/weibo/user/7394892032")

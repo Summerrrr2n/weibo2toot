@@ -15,6 +15,7 @@ from .feed_decoder import TweetDecoder
 from .media_downloader import MediaDownloader
 from .toot_poster import TootPoster
 
+
 def debugPrint(data):
   print()
   print()
@@ -52,7 +53,7 @@ def Feed2Toot(feed_data):
 
       # 过滤 不符合推文
       # 过滤纯文本
-      if not tweet_decoded['image']:
+      if not tweet_decoded['image'] and not tweet_decoded['video']:
         # debugPrint("缺少img数据 忽略...")
         toot_able = False
 
@@ -86,10 +87,5 @@ def Feed2Toot(feed_data):
   return toot_finished
 
 if __name__ == '__main__':
-  test_feed = [{
-    'title': "content",
-    'summary': 'content <br><video src="https://video.twimg.com/ext_tw_video/1266540395799785472/pu/vid/544x960/DmN8_Scq1cZ7K3YR.mp4?tag=10" controls="controls" poster="https://pbs.twimg.com/ext_tw_video_thumb/1266540395799785472/pu/img/0vFhGUy_vv3j2hWE.jpg" style="width: 100%"></video> ',
-    'id': 'https://twitter.com/zlj517/status/1266540485973180416',
-    'link': 'https://twitter.com/zlj517/status/1266540485973180416',
-  }]
+  test_feed = [{'title': '摸摸毛毛亲亲脑袋！[抱一抱] - @萨摩耶受益者联盟:&ensp;摸摸毛毛亲亲脑袋！ig：remy.samoyed | remy的妈咪真的好温柔哦！是相互治愈的存在！ 萨摩耶受益者...', 'summary': '摸摸毛毛亲亲脑袋！<span class="url-icon"><img alt="[抱一抱]" src="https://h5.sinaimg.cn/m/emoticon/icon/default/co_a1hug-f3910d0e88.png" style="width: 1em; height: 1em;" /></span><br /><blockquote> - <a href="https://weibo.com/7394892032" target="_blank">@萨摩耶受益者联盟</a>:\u2002摸摸毛毛亲亲脑袋！<br /><br />ig：remy.samoyed | remy的妈咪真的好温柔哦！是相互治愈的存在！ <a href="https://video.weibo.com/show?fid=1034:4684863085936657"><span class="url-icon"><img src="https://h5.sinaimg.cn/upload/2015/09/25/3/timeline_card_small_video_default.png" style="width: 1rem; height: 1rem;" /></span><span class="surl-text">萨摩耶受益者联盟的微博视频</span></a> </blockquote><br clear="both" /><div style="clear: both;"></div><video controls="controls" poster="https://wx3.sinaimg.cn/orj480/0084sde8gy1gure7e20d3j60k00baq4f02.jpg" style="width: 100%;"><source src="https://f.video.weibocdn.com/hrfYS4hVlx07Q48dZjxm010412001vQL0E010.mp4?label=mp4_hd&amp;template=640x360.25.0&amp;trans_finger=d8257cc71422c9ad30fe69ce9523c87b&amp;ori=0&amp;ps=1CwnkDw1GXwCQx&amp;Expires=1679474829&amp;ssig=kPl9nCoxhQ&amp;KID=unistore,video" /><source src="https://f.video.weibocdn.com/RH0pnL3Tlx07Q48e0fHq010412001Gin0E010.mp4?label=mp4_ld&amp;template=640x360.25.0&amp;trans_finger=6006a648d0db83b7d9951b3cee381a9c&amp;ori=0&amp;ps=1CwnkDw1GXwCQx&amp;Expires=1679474829&amp;ssig=kAoLhpvU0Y&amp;KID=unistore,video" /><p>视频无法显示，请前往<a href="https://video.weibo.com/show?fid=1034%3A4684863085936657&amp;luicode=10000011&amp;lfid=1076037394892032" rel="noopener noreferrer" target="_blank">微博视频</a>观看。</p></video>', 'id': 'https://weibo.com/7394892032/MymdNve8p', 'link': 'https://weibo.com/7394892032/MymdNve8p'}]
   Feed2Toot(test_feed)

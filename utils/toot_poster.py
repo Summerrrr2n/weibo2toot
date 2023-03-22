@@ -1,6 +1,7 @@
 from mastodon import Mastodon
 import filetype
 from .get_config import GetConfig
+# from get_config import GetConfig
 
 config = GetConfig()
 
@@ -32,7 +33,7 @@ def TootPoster(data):
         media_ids_arr.append(media_post('temp/video%d.mp4' % id))
       except Exception:
         media_ids_arr.append(media_post('temp/video%d.png' % id))
-        # data['plain'] = data['plain'] + '\n'+config['MASTODON']['VideoSourcePrefix']+' ' + data['video_link']
+        data['plain'] = data['plain'] + '\n'+config['MASTODON']['VideoSourcePrefix']+' ' + data['video_link']
 
   if data['image_count'] is not None:
     for id in range(1, min(data['image_count'], 5)):
