@@ -38,8 +38,8 @@ def Feed2Toot(feed_data):
 
     toot_able = True
 
-    # 过滤 求转发 帮转 信息
-    filterList = ["领养","转发","帮扩","求助","抽奖"]
+    # 过滤
+    filterList = ["转发","抽奖"]
     for filter in filterList:
       if filter in tweet['summary']:
         debugPrint("过滤 求转发 帮转 信息 忽略...")
@@ -54,7 +54,7 @@ def Feed2Toot(feed_data):
       # 过滤 不符合推文
       # 过滤纯文本
       if not tweet_decoded['image'] and not tweet_decoded['video']:
-        # debugPrint("缺少img数据 忽略...")
+        # debugPrint("缺少 media/img 数据 忽略...")
         toot_able = False
 
       print('INFO: download ' + tweet['id'])
