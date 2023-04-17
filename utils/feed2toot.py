@@ -39,7 +39,7 @@ def Feed2Toot(feed_data):
     toot_able = True
 
     # 过滤
-    filterList = ["转发","抽奖"]
+    filterList = ["旗舰店","团购价","券后","福利","到货","抽奖","快递","售价","团购","价格"]
     for filter in filterList:
       if filter in tweet['summary']:
         debugPrint("过滤 求转发 帮转 信息 忽略...")
