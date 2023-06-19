@@ -30,6 +30,11 @@ def Feed2Toot(feed_data):
   else:
     historyList = []
 
+  if path.exists('filter_log.txt'):
+    filterLogList = [line.rstrip('\n') for line in open('filter_log.txt')]
+  else:
+    filterLogList = []
+
   toot_finished = False
 
   for tweet in reversed(feed_data):
@@ -39,10 +44,11 @@ def Feed2Toot(feed_data):
     toot_able = True
 
     # 过滤
-    filterList = ["旗舰店","团购价","券后","福利","到货","抽奖","快递","售价","团购","价格"]
+    filterList = ["旗舰店","领券","券后","福利","到货","抽奖","快递","售价","团购","价格","秒杀","补贴","购买","狂欢","好物","6.18","双11","双十一","大促","限时","速抢","拼团","特价","预售","爆款","超值","实惠","新品","活动价","天猫","京东","tao宝","淘宝","11.11","购物节",]
     for filter in filterList:
       if filter in tweet['summary']:
         debugPrint("过滤 求转发 帮转 信息 忽略...")
+        filterLogList.append('广告 :' + tweet['id'])
         toot_able = False
         break
 
@@ -56,6 +62,7 @@ def Feed2Toot(feed_data):
       if not tweet_decoded['image'] and not tweet_decoded['video']:
         # debugPrint("缺少 media/img 数据 忽略...")
         toot_able = False
+        filterLogList.append('纯文本 :' + tweet['id'])
 
       print('INFO: download ' + tweet['id'])
       if toot_able and not toot_finished:
