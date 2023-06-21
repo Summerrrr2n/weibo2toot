@@ -120,7 +120,7 @@ def TweetDecoder(rss_data):
   
   # print(type(rss_data['summary']))
   plain_content = rss_data['summary'].split('<')[0]
-  data['plain'] = plain_content + '\n'+config['MASTODON']['SourcePrefix']+' ' + rss_data['link']
+  data['plain'] = plain_content + '\n'+config['MASTODON']['SourcePrefix']+' ' + rss_data['link'] + 'Source:' +' ' + '/'.join(rss_data['id'].split('/')[0:-1])
   # debugPrint(data)
   return data 
 
