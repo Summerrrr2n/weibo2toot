@@ -9,8 +9,6 @@ License: MIT
 """
 import feedparser
 
-from utils.feed_decoder import debugPrint
-
 def FeedParaser(rss_link):
   """
   :param str: RSS URL
@@ -38,4 +36,3 @@ def FeedParaser(rss_link):
   
 if __name__ == '__main__':
   print(str(FeedParaser("https://rss.summerrrrrr.blue/weibo/user/7394892032")))
-  # FeedParaser("https://rss.summerrrrrr.blue/weibo/user/7394892032")

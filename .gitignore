@@ -5,3 +5,6 @@ db.txt
 __pycache__
 venv
 log.md
+.vscode/settings.json
+filter_log.txt
+email_2023-06-22.txt

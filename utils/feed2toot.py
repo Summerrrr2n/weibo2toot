@@ -16,81 +16,100 @@ from .media_downloader import MediaDownloader
 from .toot_poster import TootPoster
 
 
-def debugPrint(data):
-  print()
-  print()
-  print(data)
-  print()
-  print()
 
-
-def Feed2Toot(feed_data):
+def getLog():
+  # create or read db.txt/filter_log.txt
   if path.exists('db.txt'):
     historyList = [line.rstrip('\n') for line in open('db.txt')]
   else:
     historyList = []
-
   if path.exists('filter_log.txt'):
-    filterLogList = [line.rstrip('\n') for line in open('filter_log.txt')]
+    filterLogList = [line.rstrip('\n') for line in open('filter_log.txt', encoding='utf8')]
   else:
     filterLogList = []
+  return historyList, filterLogList
 
+def updateLog(id, historyList, filterLogList):
+  # log
+  print('INFO: save to db ' + id)
+  with open('db.txt', 'w+') as db:
+    for row in historyList:
+      db.write(str(row) + '\n')
+  with open('filter_log.txt', 'w+', encoding='utf8') as filter_log:
+    for row in filterLogList:
+      filter_log.write(str(row) + '\n')
+
+
+def adChecker(tweet, historyList, filterLogList):
+  # ad filtered
+  filterList = ["https://weibo.com/p/","taobao","shop.sc.weibo.com","旗舰店","领券","券后","福利","到货","抽奖","快递","售价","团购","价格","秒杀","补贴","购买","狂欢","好物","6.18","双11","双十一","大促","限时","速抢","拼团","特价","预售","爆款","超值","实惠","新品","活动价","天猫","京东","tao宝","淘宝","11.11","购物节","粉丝群"]
+  toot_able = True
+  for filter in filterList:
+    if filter in tweet['summary']:
+      filterLogList.append(filter + ' ad :' + tweet['id'])
+      historyList.append(tweet['id'])
+      print('INFO: ad ' , tweet)
+      toot_able = False
+      break
+  return toot_able
+
+
+def Feed2Toot(feed_data):
+  historyList, filterLogList = getLog()
   toot_finished = False
 
+  # sort by latest
   for tweet in reversed(feed_data):
+    # check if toot alreay finished
+    if toot_finished:
+      break
+
     if not path.exists('temp'):
       makedirs('temp')
 
-    toot_able = True
+    # check if alreay filted or posted
+    if tweet['id'] in historyList:
+      continue
+    
+    # ad filtered
+    toot_able = adChecker(tweet, historyList, filterLogList)
 
-    # 过滤
-    filterList = ["旗舰店","领券","券后","福利","到货","抽奖","快递","售价","团购","价格","秒杀","补贴","购买","狂欢","好物","6.18","双11","双十一","大促","限时","速抢","拼团","特价","预售","爆款","超值","实惠","新品","活动价","天猫","京东","tao宝","淘宝","11.11","购物节",]
-    for filter in filterList:
-      if filter in tweet['summary']:
-        debugPrint("过滤 求转发 帮转 信息 忽略...")
-        filterLogList.append('广告 :' + tweet['id'])
-        toot_able = False
-        break
-
-    if toot_able and tweet['id'] not in historyList:
+    # if not already filtered or posted, then decode
+    if toot_able:
       print('INFO: decode ' + tweet['id'])
       tweet_decoded = TweetDecoder(tweet)
-      debugPrint(tweet_decoded)
 
-      # 过滤 不符合推文
-      # 过滤纯文本
+      # no media filter
       if not tweet_decoded['image'] and not tweet_decoded['video']:
-        # debugPrint("缺少 media/img 数据 忽略...")
         toot_able = False
-        filterLogList.append('纯文本 :' + tweet['id'])
+        filterLogList.append('no media :' + tweet['id'])
+        historyList.append(tweet['id'])
 
       print('INFO: download ' + tweet['id'])
       if toot_able and not toot_finished:
         try:
           toot_content = MediaDownloader(tweet_decoded)
           print('INFO: download succeed ' + tweet['id'])
-        except Exception:
+        except Exception as err:
+          print(f"Unexpected {err=}, {type(err)=}")
           print('ERRO: download failed ' + tweet['id'])
-          # for e in Exception:
-          #   (e)
+
         print('INFO: post toot ' + tweet['id'])
         try:
           TootPoster(toot_content)
           print('INFO: post succeed ' + tweet['id'])
           toot_finished = True
-        except Exception:
+          historyList.append(tweet['id'])
+        except Exception as err:
+          print(f"Unexpected {err=}, {type(err)=}")
           print('ERRO: post failed ' + tweet['id'])
-
-        historyList.append(tweet['id'])
 
     if path.exists('temp'):
       shutil.rmtree('temp')
 
-    print('INFO: save to db ' + tweet['id'])
-    with open('db.txt', 'w+') as db:
-      for row in historyList:
-        db.write(str(row) + '\n')
-    
+    # log
+    updateLog(tweet['id'], historyList, filterLogList)
+
   return toot_finished
 
 if __name__ == '__main__':

@@ -54,13 +54,10 @@ def MediaDownloader(data):
           video_id = video_id+1
         except Exception:
           print(f'ERRO: failed[vid]: {url}')
-          # for e in Exception:
-          #   print(e)
 
     res['video_count']=video_id
   
   res['plain']=data['plain']
-  # print(res)
 
   return res
 
