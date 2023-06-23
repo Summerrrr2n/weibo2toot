@@ -20,6 +20,7 @@ def TootPoster(data):
   :return void
   """
   media_ids_arr = []
+  toot_success = False
 
   if data['video_count'] is not None:
     id=1
@@ -29,18 +30,23 @@ def TootPoster(data):
     else:
       try:
         media_ids_arr.append(media_post('temp/video%d.mp4' % id))
-      except Exception:
-        media_ids_arr.append(media_post('temp/video%d.png' % id))
-        data['plain'] = data['plain'] + '\n'+config['MASTODON']['VideoSourcePrefix']+' ' + data['video_link']
+      except Exception as err:
+        print(f"INFO: append video failed for unexpected {err=}, {type(err)=}")
+        # media_ids_arr.append(media_post('temp/video%d.png' % id))
+        # data['plain'] = data['plain'] + '\n'+config['MASTODON']['VideoSourcePrefix']+' ' + data['video_link']
 
   if data['image_count'] is not None:
     for id in range(1, min(data['image_count'], 5)):
       media_ids_arr.append(media_post('temp/img%d.png' % id))
+  
+  if len(media_ids_arr) >= 1 :
+    try:
+      mastodon.status_post(status=data['plain'], media_ids=media_ids_arr, visibility=config['MASTODON']['TootVisibility'])
+      toot_success = True
+    except Exception as err:
+      print(f'ERRO: failed[mastodon.status_post] for unexpected {err=}, {type(err)=}')
 
-  try:
-    mastodon.status_post(status=data['plain'], media_ids=media_ids_arr, visibility=config['MASTODON']['TootVisibility'])
-  except Exception:
-    print(f'ERRO: failed[mastodon.status_post]')
+  return toot_success
 
 if __name__ == '__main__':
   test_data = {'gif_count': 1, 'video_count': None, 'image_count': 3, 'plain': 'Tooting from python using `status_post` #mastodonpy !'}

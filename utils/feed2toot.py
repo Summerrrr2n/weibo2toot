@@ -60,10 +60,6 @@ def Feed2Toot(feed_data):
 
   # sort by latest
   for tweet in reversed(feed_data):
-    # check if toot alreay finished
-    if toot_finished:
-      break
-
     if not path.exists('temp'):
       makedirs('temp')
 
@@ -96,13 +92,16 @@ def Feed2Toot(feed_data):
 
         print('INFO: post toot ' + tweet['id'])
         try:
-          TootPoster(toot_content)
-          print('INFO: post succeed ' + tweet['id'])
-          toot_finished = True
-          historyList.append(tweet['id'])
+          toot_finished = TootPoster(toot_content)
         except Exception as err:
           print(f"Unexpected {err=}, {type(err)=}")
           print('ERRO: post failed ' + tweet['id'])
+
+      # check if toot alreay finished
+      if toot_finished:
+        print('INFO: post succeed ' + tweet['id'])
+        historyList.append(tweet['id'])
+        break
 
     if path.exists('temp'):
       shutil.rmtree('temp')

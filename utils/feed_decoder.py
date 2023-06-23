@@ -17,18 +17,16 @@ config = GetConfig()
 
 def TweetTextFormater(soup):
   plain_content = str(soup)
-  print('plain_content...',plain_content)
   plain_content = plain_content.replace('&lt;|n&gt; - ', '')
   plain_content = plain_content.replace('&lt;|n&gt;', '')
   plain_content = plain_content.replace(' ', '')
   plain_content = plain_content.replace('\n', ' ')
   plain_content = plain_content.replace('转发', ' ')
+  plain_content = plain_content.replace('转发微博', ' ')
   plain_content = plain_content.replace('-', ' ')
   plain_content = plain_content.replace('\t', ' ')
   plain_content = re.sub(r"\[\?bs4_replace_flag\?\][\u4E00-\u9FA5A-Za-z0-9_]*的微博视频\[\?bs4_replace_flag\?]", "", plain_content)
-  # plain_content = re.sub(r"\[\?bs4_replace_flag\?][\u4e00-\u9fa5]*网页链接\[\?bs4_replace_flag\?]", "", plain_content)
   plain_content = re.sub(r"\[\?bs4_replace_flag\?]", "", plain_content)  
-  print('plain_content...',plain_content)
   return plain_content
 
 
@@ -112,7 +110,6 @@ def TweetDecoder(rss_data):
     blockquote.unwrap()
 
   content = TweetTextFormater(soup)
-  print('content...',content)
   data['plain'] = content + '\n'+config['MASTODON']['SourcePrefix']+' ' + rss_data['link'] + '\n'+ 'Source:' +' ' + '/'.join(rss_data['id'].split('/')[0:-1])
   return data 
 
