@@ -12,7 +12,7 @@ mastodon = Mastodon(
 
 def media_post(file):
   kind = filetype.guess(file)
-  return mastodon.media_post(file)
+  return mastodon.media_post(file, kind)
 
 def TootPoster(data):
   """
