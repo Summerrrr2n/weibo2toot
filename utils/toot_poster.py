@@ -32,6 +32,8 @@ def TootPoster(data):
         media_ids_arr.append(mastodon.media_post('temp/video%d.mp4' % id, filetype.guess('temp/video1.mp4'),synchronous=True))
       except Exception as err:
         print(f"INFO: append video failed for unexpected {err=}, {type(err)=}")
+        toot_success = False
+
         # media_ids_arr.append(media_post('temp/video%d.png' % id))
         # data['plain'] = data['plain'] + '\n'+config['MASTODON']['VideoSourcePrefix']+' ' + data['video_link']
 
@@ -47,6 +49,7 @@ def TootPoster(data):
       toot_success = True
     except Exception as err:
       print(f'ERRO: failed[mastodon.status_post] for unexpected {err=}, {type(err)=}')
+      toot_success = False
 
   return toot_success
 

@@ -14,7 +14,7 @@ import shutil
 from .feed_decoder import TweetDecoder
 from .media_downloader import MediaDownloader
 from .toot_poster import TootPoster
-
+import time
 
 
 def getLog():
@@ -72,7 +72,7 @@ def Feed2Toot(feed_data):
 
     # if not already filtered or posted, then decode
     if toot_able:
-      print('INFO: decode ' + tweet['id'])
+      print('INFO: decode ' + tweet['id'] + ' ' +time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
       tweet_decoded = TweetDecoder(tweet)
 
       # no media filter
