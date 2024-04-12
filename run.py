@@ -43,6 +43,7 @@ if __name__ == '__main__':
     # 发送今日邮件
     contents = GetTodayLog()
     if contents:
+        os.remove("log.txt")
         fromAD = config['EMAIL']['From']
         toAD = config['EMAIL']['To']
         passport = config['EMAIL']['Password']
