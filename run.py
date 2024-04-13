@@ -12,7 +12,7 @@ from utils.feed_parser import FeedParaser
 from utils.feed2toot import Feed2Toot
 from utils.get_config import GetConfig
 from utils.send_email import SendEmail
-from utils.generate_log import GenerateSuccessLog, GetTodayLog, GenerateFailedLog
+from utils.generate_log import GenerateSuccessLog, GetTodayLog, GenerateFailedLog, GetGitAutoPullLog, GenerateSummary
 from utils.toot_poster import TootPosterLog
 import os
 
@@ -45,6 +45,7 @@ if __name__ == '__main__':
 
     # 发送今日邮件
     contents = GetTodayLog()
+    summary = GenerateSummary(runSuccess)
     if contents:
         os.remove("log.txt")
         fromAD = config['EMAIL']['From']
@@ -52,5 +53,6 @@ if __name__ == '__main__':
         passport = config['EMAIL']['Password']
         host = config['EMAIL']['Host']
         subject = config['EMAIL']['Subject']
-        TootPosterLog("#puppyBot工作日志 " + contents)
-        SendEmail(fromAD, passport, toAD, host, subject, contents)
+        TootPosterLog("#puppyBot工作日志 " + contents + summary)
+        SendEmail(fromAD, passport, toAD, host, subject,
+                  contents + GetGitAutoPullLog())

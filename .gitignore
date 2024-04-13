@@ -8,3 +8,4 @@ log.md
 .vscode/settings.json
 filter_log.txt
 email_*.txt
+gitlog.txt
