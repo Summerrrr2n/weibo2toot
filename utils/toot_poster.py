@@ -53,6 +53,14 @@ def TootPoster(data):
 
   return toot_success
 
+
+def TootPosterLog(text):
+  """
+  :text string
+  """
+  mastodon.status_post(status=text, visibility=config['MASTODON']['TootVisibility'],)
+
 if __name__ == '__main__':
-  test_data = {'gif_count': 1, 'video_count': None, 'image_count': 3, 'plain': 'Tooting from python using `status_post` #mastodonpy !'}
+  test_data = {'gif_count': 1, 'video_count': None, 'image_count': None, 'plain': 'Tooting from python using `status_post` #mastodonpy !'}
+  TootPosterLog("Tooting from python using `TootPosterLog` ")
   TootPoster(test_data)

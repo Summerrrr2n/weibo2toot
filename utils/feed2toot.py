@@ -98,7 +98,11 @@ def Feed2Toot(feed_data):
           print('ERRO: post failed ' + tweet['id'])
 
     if path.exists('temp'):
-      shutil.rmtree('temp')
+      try:
+        shutil.rmtree('temp')
+      except Exception as err:
+          print(f"Unexpected {err=}, {type(err)=}")
+          print('ERRO: ' + tweet['id'])
 
     # check if toot alreay finished
     if toot_finished:

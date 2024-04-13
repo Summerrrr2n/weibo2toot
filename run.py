@@ -12,7 +12,8 @@ from utils.feed_parser import FeedParaser
 from utils.feed2toot import Feed2Toot
 from utils.get_config import GetConfig
 from utils.send_email import SendEmail
-from utils.generate_log import GenerateLog, GetTodayLog
+from utils.generate_log import GenerateSuccessLog, GetTodayLog, GenerateFailedLog
+from utils.toot_poster import TootPosterLog
 import os
 
 config = GetConfig()
@@ -23,22 +24,24 @@ if __name__ == '__main__':
         os.environ['HTTPS_PROXY'] = config['PROXY']['HttpsProxy']
     runSuccess = False
     # 随机选择一个rss源
-    while not runSuccess:
+    tryTime = 0
+    maxRetry = 10
+    while not runSuccess and tryTime < maxRetry:
         RSS_dict = []
-        tryRssTime = 0
-        while len(RSS_dict) == 0 and tryRssTime < 10:
+        while len(RSS_dict) == 0 and tryTime < maxRetry:
             # 随机选择一个rss源直到解析成功,最大尝试次数10
             RSSList = eval(config['WEIBO']['RSSList'])
             RSSAddress = config['WEIBO']['WeiboRssAPI'] + \
                 str(random.sample(RSSList, 1)[0])
             RSS_dict = FeedParaser(RSSAddress)
-            tryRssTime += 1
+            tryTime += 1
         if (len(RSS_dict) != 0):
             runSuccess = Feed2Toot(RSS_dict)
 
-    result = 'Success.' if runSuccess else 'Not Success.' 
-    log_text = 'run over, this time is ' + result
-    GenerateLog(log_text)
+    if runSuccess:
+        GenerateSuccessLog()
+    else:
+        GenerateFailedLog()
 
     # 发送今日邮件
     contents = GetTodayLog()
@@ -49,4 +52,5 @@ if __name__ == '__main__':
         passport = config['EMAIL']['Password']
         host = config['EMAIL']['Host']
         subject = config['EMAIL']['Subject']
+        TootPosterLog("#puppyBot工作日志 " + contents)
         SendEmail(fromAD, passport, toAD, host, subject, contents)
