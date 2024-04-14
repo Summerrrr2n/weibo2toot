@@ -12,7 +12,7 @@ from utils.feed_parser import FeedParaser
 from utils.feed2toot import Feed2Toot
 from utils.get_config import GetConfig
 from utils.send_email import SendEmail
-from utils.generate_log import GenerateSuccessLog, GetTodayLog, GenerateFailedLog, GetGitAutoPullLog, GenerateSummary, CronDeleteLog
+from utils.generate_log import GenerateSuccessLog, GetTodayLog, GenerateFailedLog, GetGitAutoPullLog, GenerateSummary, CronDeleteLog, date, cur_time
 from utils.toot_poster import TootPosterLog
 import os
 
@@ -26,6 +26,7 @@ if __name__ == '__main__':
     # 随机选择一个rss源
     tryTime = 0
     maxRetry = 10
+    print(date+" "+ cur_time)
     while not runSuccess and tryTime < maxRetry:
         RSS_dict = []
         while len(RSS_dict) == 0 and tryTime < maxRetry:
