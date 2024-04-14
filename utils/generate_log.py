@@ -103,7 +103,7 @@ def GetTodayLog():
         return log.read()
 
 def CronDeleteLog():
-    if date.split(':')[0] == '28' and cur_time.split(':')[0] == '00' and path.exists("log.txt"):
+    if cur_time.split(':')[0] == '12' and path.exists("log.txt"):
         os.remove("log.txt")    
 
 if __name__ == '__main__':
