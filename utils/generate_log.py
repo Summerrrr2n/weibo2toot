@@ -19,6 +19,7 @@ failedRecord = ["啊呀，这次发送没有成功。", "唉呀，这次发送�
 
 config = GetConfig()
 
+
 def getYesterday():
     today = datetime.date.today()
     oneday = datetime.timedelta(days=1)
@@ -35,18 +36,19 @@ def randomWoof(text, failed=False):
     if failed:
         woof = '呜' * random.randint(1, 3) + "~"
 
-
     if random.randint(1, 100) > 50:
         return text + woof
     else:
         return woof + text
 
+
 def GenerateSummary(isSuccess):
     if isSuccess:
-        return "\n\n" + config['MASTODON']['SourcePrefix']+ " " + randomWoof(random.choice(summary)) + "大家晚安！明天见！"
+        return "\n\n" + config['MASTODON']['SourcePrefix'] + " " + randomWoof(random.choice(summary)) + "大家晚安！明天见！"
     else:
-        return "\n\n" + config['MASTODON']['SourcePrefix']+ " "  + randomWoof("今天有点小失误，大家晚安！明天见！")
-    
+        return "\n\n" + config['MASTODON']['SourcePrefix'] + " " + randomWoof("今天有点小失误，大家晚安！明天见！")
+
+
 def writeSingleRecord():
     record = ""
     if cur_time.split(':')[0] == '00':
@@ -78,7 +80,8 @@ def GenerateFailedLog():
     initialLog()
     # 内容
     log_content = open("email_%s.txt" % date, 'a')
-    log_content.write(cur_time+": " + randomWoof(random.choice(failedRecord), True) + '\n')
+    log_content.write(
+        cur_time+": " + randomWoof(random.choice(failedRecord), True) + '\n')
     log_content.close()
 
 
@@ -92,8 +95,14 @@ def GenerateSuccessLog():
 
 
 def GetGitAutoPullLog():
-    log = open("gitlog.txt", 'r+')
-    return '\nGit Auto Pull Log:\n'+ log.read()
+    log = open("gitlog.txt", 'r+', errors='ignore')
+    text = log.read()
+    commitNum = text.count("commit ")
+    while commitNum > 1:
+        text = "".join(text[::-1].split((" timmoc"), 1)[1])[::-1]
+        commitNum = text.count("commit ")
+    return '\nGit Auto Pull Log:\nLast commit\n' + text
+
 
 def GetTodayLog():
     if cur_time.split(':')[0] != '23':
@@ -102,11 +111,13 @@ def GetTodayLog():
         log = open("email_%s.txt" % date, 'r+')
         return log.read()
 
+
 def CronDeleteLog():
     if cur_time.split(':')[0] == '12' and path.exists("log.txt"):
-        os.remove("log.txt")    
+        os.remove("log.txt")
+
 
 if __name__ == '__main__':
     print(GenerateSuccessLog())
-    print(GenerateFailedLog())
+    print(GetGitAutoPullLog())
     # GenerateFailedLog()
