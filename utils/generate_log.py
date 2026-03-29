@@ -95,12 +95,21 @@ def GenerateSuccessLog():
 
 
 def GetGitAutoPullLog():
-    log = open("gitlog.txt", 'r+', errors='ignore')
+    try:
+        log = open("gitlog.txt", 'r+', errors='ignore')
+    except FileNotFoundError:
+        log = open("gitlog.txt", 'w+', errors='ignore')
+        
     text = log.read()
     commitNum = text.count("commit ")
     while commitNum > 1:
         text = "".join(text[::-1].split((" timmoc"), 1)[1])[::-1]
         commitNum = text.count("commit ")
+    log.close()
+    
+    if not text:
+        return '\nGit Auto Pull Log:\nNo record yet'
+    
     return '\nGit Auto Pull Log:\nLast commit\n' + text
 
 
